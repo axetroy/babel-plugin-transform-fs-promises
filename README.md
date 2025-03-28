@@ -29,25 +29,26 @@ const BabelPluginTransformFsPromises = require("babel-plugin-transform-fs-promis
 import { transformSync } from "@babel/core";
 import BabelPluginTransformFsPromises from "babel-plugin-transform-fs-promises";
 
-const result = transformSync(
-  `
-    import { readFile } from 'fs/promises';
-    readFile('foo.txt');
-  `,
-  {
-    plugins: [BabelPluginTransformFsPromises],
-  }
-);
+const code = `
+import { readFile } from 'fs/promises';
+readFile('foo.txt');
+`;
+
+const result = transformSync(code, {
+  plugins: [BabelPluginTransformFsPromises],
+});
 
 console.log(result.code);
 
 // Output:
 
 /**
-import { promises: _promises_no_conflict_alias } from 'fs';
+
+import { promises as _promises_no_conflict_alias } from 'fs';
 const { readFile } = _promises_no_conflict_alias;
 readFile('foo.txt');
- */
+
+*/
 ```
 
 ## License
