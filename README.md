@@ -7,6 +7,8 @@
 
 A Babel plugin to transform `require('fs/promises')` to `require('fs').promises` for Node.js 11 and below.
 
+Compatible with `Babel@^7.0.0`.
+
 ## Installation
 
 ```bash
@@ -40,9 +42,12 @@ const result = transformSync(
 console.log(result.code);
 
 // Output:
-// import { promises: promises_no_conflict_alias } from 'fs';
-// const { readFile } = promises_no_conflict_alias;
-// readFile('foo.txt');
+
+/**
+import { promises: promises_no_conflict_alias } from 'fs';
+const { readFile } = promises_no_conflict_alias;
+readFile('foo.txt');
+ */
 ```
 
 ## License
