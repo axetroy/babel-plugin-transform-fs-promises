@@ -16,12 +16,11 @@ test("test esm output", (t) => {
 
   execSync("yarn", { cwd: targetDir });
 
-  const output = execSync("npm run test", {
+  const output = execSync("npm run test --no-color", {
     cwd: targetDir,
     stdio: "pipe",
     env: {
-      ...process.env,
-      NODE_DISABLE_COLORS: "1",
+      PATH: process.env.PATH,
       NO_COLOR: "1",
     },
   });
@@ -36,12 +35,11 @@ test("test cjs output", (t) => {
 
   execSync("yarn", { cwd: targetDir });
 
-  const output = execSync("npm run test", {
+  const output = execSync("npm run test --no-color", {
     cwd: targetDir,
     stdio: "pipe",
     env: {
-      ...process.env,
-      NODE_DISABLE_COLORS: "1",
+      PATH: process.env.PATH,
       NO_COLOR: "1",
     },
   });

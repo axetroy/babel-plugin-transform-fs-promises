@@ -4,8 +4,8 @@ exports[`test cjs output 1`] = `
 > node index.cjs
 
 {
-  babelPluginTransformFsPromises: [36m[Function: babelPluginTransformFsPromises][39m,
-  default: [36m[Function: babelPluginTransformFsPromises][39m
+  babelPluginTransformFsPromises: [Function: babelPluginTransformFsPromises],
+  default: [Function: babelPluginTransformFsPromises]
 }
 const fs = require("fs").promises;
 
@@ -16,7 +16,7 @@ exports[`test esm output 1`] = `
 > esm@1.0.0 test
 > node index.mjs
 
-[36m[Function: babelPluginTransformFsPromises][39m
+[Function: babelPluginTransformFsPromises]
 const fs = require("fs").promises;
 
 `;
