@@ -1,10 +1,12 @@
 import assert from "node:assert";
-import test from "node:test";
+import test, { describe } from "node:test";
 
 import { transformSync } from "@babel/core";
 import prettier from "prettier";
+import outdent from "outdent";
+import babelCoreFrame from "@babel/code-frame";
 
-import plugin from "../src/index";
+import babelPluginTransformFsPromises from "../src/index";
 
 function formatCode(code: string) {
   return prettier.format(code, { parser: "babel" });
@@ -14,58 +16,93 @@ async function assertCode(code: string, output: string) {
   assert.strictEqual(await formatCode(code), await formatCode(output));
 }
 
-test('transform-fs-promises: const fsPromises = require("fs/promises")', async (t) => {
-  const code = `const fsPromises = require("fs/promises");`;
-  const output = `const fsPromises = require("fs").promises;`;
+function paddingLines(code: string, padding: number) {
+  const lines = code.split("\n");
+  return lines.map((line) => " ".repeat(padding) + line).join("\n");
+}
 
-  const result = transformSync(code, { plugins: [plugin] });
-  await assertCode(result!.code!, output);
-});
+function testSnapshot(codes: Array<string | [string, string]>) {
+  describe("transform-fs-promises", () => {
+    for (const code of codes) {
+      const input = typeof code === "string" ? code : code[0];
 
-test('transform-fs-promises: module.exports = require("fs/promises")', async (t) => {
-  const code = `module.exports = require("fs/promises");`;
-  const output = `module.exports = require("fs").promises;`;
+      test(input, async (t) => {
+        const result = transformSync(input, {
+          plugins: [babelPluginTransformFsPromises],
+        });
 
-  const result = transformSync(code, { plugins: [plugin] });
-  await assertCode(result!.code!, output);
-});
+        if (Array.isArray(code) && code.length > 1) {
+          const output = code[1];
+          assert(result);
+          await assertCode(result.code!, output);
+        }
 
-test('transform-fs-promises: const { readFile } = require("fs/promises")', async (t) => {
-  const code = `const { readFile } = require("fs/promises");`;
-  const output = `const { readFile } = require("fs").promises;`;
+        const markdown = outdent`
+        ### Input
 
-  const result = transformSync(code, { plugins: [plugin] });
-  await assertCode(result!.code!, output);
-});
+        ${paddingLines(babelCoreFrame(input, 0, 0, {}), 4)}
 
-test('transform-fs-promises: dynamic import("fs/promises")', async (t) => {
-  const code = `const fsPromises = await import('fs/promises');`;
-  const output = `const fsPromises = await import('fs').then(m => m.promises);`;
+        ### Output
+        
+        ${paddingLines(babelCoreFrame(result?.code!, 0, 0, { linesAbove: Infinity, linesBelow: Infinity }), 4)}
+        `;
 
-  const result = transformSync(code, { plugins: [plugin] });
-  await assertCode(result!.code!, output);
-});
+        t.assert.snapshot(markdown, {
+          serializers: [(value) => value],
+        });
+      });
+    }
+  });
+}
 
-test('transform-fs-promises: import fs from "fs/promises"', async (t) => {
-  const code = `import fs from 'fs/promises';`;
-  const output = `import { promises as fs } from 'fs';`;
-
-  const result = transformSync(code, { plugins: [plugin] });
-  await assertCode(result!.code!, output);
-});
-
-test('transform-fs-promises: import { readFile } from "fs/promises"', async (t) => {
-  const code = `import { readFile } from 'fs/promises';`;
-  const output = `import { promises as promises_no_conflict_alias } from 'fs';\nconst { readFile } = promises_no_conflict_alias;`;
-
-  const result = transformSync(code, { plugins: [plugin] });
-  await assertCode(result!.code!, output);
-});
-
-test('transform-fs-promises: import fs, { readFile, stat } from "fs/promises"', async (t) => {
-  const code = `import fs, { readFile, stat } from 'fs/promises';`;
-  const output = `import fs, { promises as promises_no_conflict_alias } from 'fs';\nconst { readFile, stat } = promises_no_conflict_alias;`;
-
-  const result = transformSync(code, { plugins: [plugin] });
-  await assertCode(result!.code!, output);
-});
+testSnapshot([
+  // cjs: import default
+  [
+    `const fs = require("fs/promises");`,
+    `const fs = require("fs").promises;`,
+  ],
+  // cjs: import named
+  [
+    `const { readFile } = require("fs/promises");`,
+    `const { readFile } = require("fs").promises;`
+  ],
+  // cjs: import multiple named
+  [
+    `const { readFile, stat } = require("fs/promises");`,
+    `const { readFile, stat } = require("fs").promises;`
+  ],
+  // esm: import dynamic
+  [
+    `const fs = import("fs/promises");`,
+    `const fs = import("fs").then((m) => m.promises);`,
+  ],
+  // esm: import default
+  [
+    `import fs from "fs/promises";`,
+    `import { promises as fs } from "fs";`,
+  ],
+  // esm: import named
+  [
+    `import { readFile } from "fs/promises";`,
+    `
+      import { promises as _promises_no_conflict_alias} from "fs";
+      const { readFile } = _promises_no_conflict_alias;
+    `,
+  ],
+  // esm: import multiple named
+  [
+    `import { readFile, stat } from "fs/promises";`,
+    `
+      import { promises as _promises_no_conflict_alias } from "fs";
+      const { readFile, stat } = _promises_no_conflict_alias;
+    `,
+  ],
+  // esm: import default + named
+  [
+    `import fs, { readFile } from "fs/promises";`,
+    `
+      import fs, { promises as _promises_no_conflict_alias } from "fs";
+      const { readFile } = _promises_no_conflict_alias;
+    `
+  ]
+]);

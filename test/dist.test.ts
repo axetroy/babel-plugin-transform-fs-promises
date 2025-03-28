@@ -11,24 +11,42 @@ before(() => {
   });
 });
 
-test("test esm output", () => {
+test("test esm output", (t) => {
   const targetDir = path.join(rootDir, "fixtures", "esm");
 
   execSync("yarn", { cwd: targetDir });
 
-  execSync("npm run test", {
+  const output = execSync("npm run test", {
     cwd: targetDir,
-    stdio: "inherit",
+    stdio: "pipe",
+    env: {
+      ...process.env,
+      NODE_DISABLE_COLORS: "1",
+      NO_COLOR: "1",
+    },
+  });
+
+  t.assert.snapshot(output.toString(), {
+    serializers: [(value) => value],
   });
 });
 
-test("test cjs output", () => {
+test("test cjs output", (t) => {
   const targetDir = path.join(rootDir, "fixtures", "cjs");
 
   execSync("yarn", { cwd: targetDir });
 
-  execSync("npm run test", {
+  const output = execSync("npm run test", {
     cwd: targetDir,
-    stdio: "inherit",
+    stdio: "pipe",
+    env: {
+      ...process.env,
+      NODE_DISABLE_COLORS: "1",
+      NO_COLOR: "1",
+    },
+  });
+
+  t.assert.snapshot(output.toString(), {
+    serializers: [(value) => value],
   });
 });

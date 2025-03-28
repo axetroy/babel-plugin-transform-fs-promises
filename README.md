@@ -44,8 +44,8 @@ console.log(result.code);
 // Output:
 
 /**
-import { promises: promises_no_conflict_alias } from 'fs';
-const { readFile } = promises_no_conflict_alias;
+import { promises: _promises_no_conflict_alias } from 'fs';
+const { readFile } = _promises_no_conflict_alias;
 readFile('foo.txt');
  */
 ```

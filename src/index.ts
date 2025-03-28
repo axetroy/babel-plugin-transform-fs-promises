@@ -81,7 +81,7 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
           );
         }
 
-        // 2. 处理 import { readFile, stat } from 'fs/promises' → port { promises } from 'fs';\nconst { readFile, stat } = promises;
+        // 2. 处理 import { readFile, stat } from 'fs/promises' → import { promises } from 'fs';\nconst { readFile, stat } = promises;
         if (
           moduleNames.has(node.source.value) &&
           node.specifiers.some((spec) => t.isImportSpecifier(spec))
@@ -94,7 +94,7 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
             t.isImportDefaultSpecifier(spec)
           );
 
-          const localPromises = t.identifier("promises_no_conflict_alias");
+          const localPromises = t.identifier("_promises_no_conflict_alias");
 
           path.replaceWithMultiple([
             t.importDeclaration(
