@@ -35,7 +35,7 @@ readFile('foo.txt');
 `;
 
 const result = transformSync(code, {
-  plugins: [babelPluginTransformFsPromises],
+    plugins: [babelPluginTransformFsPromises],
 });
 
 console.log(result.code);
