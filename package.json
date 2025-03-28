@@ -50,8 +50,10 @@
         "typescript": "^5.7.2"
     },
     "keywords": [
-        "babel-plugin",
-        "detector"
+        "babel",
+        "plugin",
+        "transform",
+        "fs-promises"
     ],
     "homepage": "https://github.com/axetroy/babel-plugin-transform-fs-promises#readme",
     "bugs": {
