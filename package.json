@@ -37,12 +37,9 @@
     "devDependencies": {
         "@babel/code-frame": "^7.26.2",
         "@babel/core": "^7.26.10",
-        "@babel/parser": "^7.26.10",
-        "@babel/traverse": "^7.26.10",
         "@rslib/core": "^0.5.4",
         "@types/babel__code-frame": "^7.0.6",
         "@types/babel__core": "^7.20.5",
-        "@types/babel__traverse": "^7.20.6",
         "@types/node": "^22.10.2",
         "outdent": "^0.8.0",
         "prettier": "^3.5.3",
