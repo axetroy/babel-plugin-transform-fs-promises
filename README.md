@@ -5,7 +5,7 @@
 ![Node](https://img.shields.io/badge/node-%3E=14-blue.svg?style=flat-square)
 [![npm version](https://badge.fury.io/js/babel-plugin-transform-fs-promises.svg)](https://badge.fury.io/js/babel-plugin-transform-fs-promises)
 
-A Babel plugin to transform `require('fs/promises')` to `require('fs').promises` for Node.js 11 and below.
+A Babel plugin to transform `require('fs/promises')` to `require('fs').promises` for compatible with Node.js 14 and below.
 
 Compatible with `Babel@^7.0.0`.
 
@@ -19,15 +19,15 @@ npm install babel-plugin-transform-fs-promises --save
 
 ```js
 // import via esm
-import BabelPluginTransformFsPromises from "babel-plugin-transform-fs-promises";
+import babelPluginTransformFsPromises from "babel-plugin-transform-fs-promises";
 
 // import via cjs
-const BabelPluginTransformFsPromises = require("babel-plugin-transform-fs-promises");
+const babelPluginTransformFsPromises = require("babel-plugin-transform-fs-promises");
 ```
 
 ```js
 import { transformSync } from "@babel/core";
-import BabelPluginTransformFsPromises from "babel-plugin-transform-fs-promises";
+import babelPluginTransformFsPromises from "babel-plugin-transform-fs-promises";
 
 const code = `
 import { readFile } from 'fs/promises';
@@ -35,7 +35,7 @@ readFile('foo.txt');
 `;
 
 const result = transformSync(code, {
-  plugins: [BabelPluginTransformFsPromises],
+  plugins: [babelPluginTransformFsPromises],
 });
 
 console.log(result.code);
