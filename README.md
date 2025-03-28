@@ -51,6 +51,10 @@ readFile('foo.txt');
 */
 ```
 
+## Relative
+
+- [transform-fs-promises-webpack-plugin](https://github.com/axetroy/transform-fs-promises-webpack-plugin)
+
 ## License
 
 The [Anti 996 License](LICENSE)
