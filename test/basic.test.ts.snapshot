@@ -1,14 +1,4 @@
-exports[`transform-fs-promises > const fs = import("fs/promises"); 1`] = `
-### Input
-
-      1 | const fs = import("fs/promises");
-
-### Output
-
-      1 | const fs = import("fs").then(m => m.promises);
-`;
-
-exports[`transform-fs-promises > const fs = require("fs/promises"); 1`] = `
+exports[`transform-fs-promises: cjs > const fs = require("fs/promises"); 1`] = `
 ### Input
 
       1 | const fs = require("fs/promises");
@@ -18,7 +8,17 @@ exports[`transform-fs-promises > const fs = require("fs/promises"); 1`] = `
       1 | const fs = require("fs").promises;
 `;
 
-exports[`transform-fs-promises > const { readFile } = require("fs/promises"); 1`] = `
+exports[`transform-fs-promises: cjs > const fs = require("node:fs/promises"); 1`] = `
+### Input
+
+      1 | const fs = require("node:fs/promises");
+
+### Output
+
+      1 | const fs = require("fs").promises;
+`;
+
+exports[`transform-fs-promises: cjs > const { readFile } = require("fs/promises"); 1`] = `
 ### Input
 
       1 | const { readFile } = require("fs/promises");
@@ -30,7 +30,19 @@ exports[`transform-fs-promises > const { readFile } = require("fs/promises"); 1`
       3 | } = require("fs").promises;
 `;
 
-exports[`transform-fs-promises > const { readFile, stat } = require("fs/promises"); 1`] = `
+exports[`transform-fs-promises: cjs > const { readFile } = require("node:fs/promises"); 1`] = `
+### Input
+
+      1 | const { readFile } = require("node:fs/promises");
+
+### Output
+
+      1 | const {
+      2 |   readFile
+      3 | } = require("fs").promises;
+`;
+
+exports[`transform-fs-promises: cjs > const { readFile, stat } = require("fs/promises"); 1`] = `
 ### Input
 
       1 | const { readFile, stat } = require("fs/promises");
@@ -43,7 +55,40 @@ exports[`transform-fs-promises > const { readFile, stat } = require("fs/promises
       4 | } = require("fs").promises;
 `;
 
-exports[`transform-fs-promises > import fs from "fs/promises"; 1`] = `
+exports[`transform-fs-promises: cjs > const { readFile, stat } = require("node:fs/promises"); 1`] = `
+### Input
+
+      1 | const { readFile, stat } = require("node:fs/promises");
+
+### Output
+
+      1 | const {
+      2 |   readFile,
+      3 |   stat
+      4 | } = require("fs").promises;
+`;
+
+exports[`transform-fs-promises: esm > const fs = import("fs/promises"); 1`] = `
+### Input
+
+      1 | const fs = import("fs/promises");
+
+### Output
+
+      1 | const fs = import("fs").then(m => m.promises);
+`;
+
+exports[`transform-fs-promises: esm > const fs = import("node:fs/promises"); 1`] = `
+### Input
+
+      1 | const fs = import("node:fs/promises");
+
+### Output
+
+      1 | const fs = import("fs").then(m => m.promises);
+`;
+
+exports[`transform-fs-promises: esm > import fs from "fs/promises"; 1`] = `
 ### Input
 
       1 | import fs from "fs/promises";
@@ -53,7 +98,17 @@ exports[`transform-fs-promises > import fs from "fs/promises"; 1`] = `
       1 | import { promises as fs } from "fs";
 `;
 
-exports[`transform-fs-promises > import fs, { readFile } from "fs/promises"; 1`] = `
+exports[`transform-fs-promises: esm > import fs from "node:fs/promises"; 1`] = `
+### Input
+
+      1 | import fs from "node:fs/promises";
+
+### Output
+
+      1 | import { promises as fs } from "fs";
+`;
+
+exports[`transform-fs-promises: esm > import fs, { readFile } from "fs/promises"; 1`] = `
 ### Input
 
       1 | import fs, { readFile } from "fs/promises";
@@ -66,7 +121,20 @@ exports[`transform-fs-promises > import fs, { readFile } from "fs/promises"; 1`]
       4 | } = _promises_no_conflict_alias;
 `;
 
-exports[`transform-fs-promises > import { readFile } from "fs/promises"; 1`] = `
+exports[`transform-fs-promises: esm > import fs, { readFile } from "node:fs/promises"; 1`] = `
+### Input
+
+      1 | import fs, { readFile } from "node:fs/promises";
+
+### Output
+
+      1 | import fs, { promises as _promises_no_conflict_alias } from "fs";
+      2 | const {
+      3 |   readFile
+      4 | } = _promises_no_conflict_alias;
+`;
+
+exports[`transform-fs-promises: esm > import { readFile } from "fs/promises"; 1`] = `
 ### Input
 
       1 | import { readFile } from "fs/promises";
@@ -79,10 +147,37 @@ exports[`transform-fs-promises > import { readFile } from "fs/promises"; 1`] = `
       4 | } = _promises_no_conflict_alias;
 `;
 
-exports[`transform-fs-promises > import { readFile, stat } from "fs/promises"; 1`] = `
+exports[`transform-fs-promises: esm > import { readFile } from "node:fs/promises"; 1`] = `
+### Input
+
+      1 | import { readFile } from "node:fs/promises";
+
+### Output
+
+      1 | import { promises as _promises_no_conflict_alias } from "fs";
+      2 | const {
+      3 |   readFile
+      4 | } = _promises_no_conflict_alias;
+`;
+
+exports[`transform-fs-promises: esm > import { readFile, stat } from "fs/promises"; 1`] = `
 ### Input
 
       1 | import { readFile, stat } from "fs/promises";
+
+### Output
+
+      1 | import { promises as _promises_no_conflict_alias } from "fs";
+      2 | const {
+      3 |   readFile,
+      4 |   stat
+      5 | } = _promises_no_conflict_alias;
+`;
+
+exports[`transform-fs-promises: esm > import { readFile, stat } from "node:fs/promises"; 1`] = `
+### Input
+
+      1 | import { readFile, stat } from "node:fs/promises";
 
 ### Output
 

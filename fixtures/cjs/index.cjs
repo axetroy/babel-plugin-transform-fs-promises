@@ -1,7 +1,6 @@
 const { transformSync } = require("@babel/core");
 const babelPluginTransformFsPromises = require("babel-plugin-transform-fs-promises");
 
-console.log(__filename);
 console.log(babelPluginTransformFsPromises);
 
 const input = `
