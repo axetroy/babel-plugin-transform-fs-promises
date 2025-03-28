@@ -1,0 +1,63 @@
+{
+    "name": "babel-plugin-transform-fs-promises",
+    "version": "0.1.0",
+    "private": false,
+    "description": "A Babel plugin to transform fs promises APIs",
+    "sideEffects": false,
+    "files": [
+        "dist"
+    ],
+    "type": "commonjs",
+    "main": "dist/cjs/index.js",
+    "module": "dist/esm/index.mjs",
+    "exports": {
+        "./package.json": {
+            "import": "./package.json",
+            "require": "./package.json"
+        },
+        ".": {
+            "require": {
+                "default": "./dist/cjs/index.js",
+                "types": "./dist/cjs/index.d.ts"
+            },
+            "import": {
+                "default": "./dist/esm/index.mjs",
+                "types": "./dist/esm/index.d.ts"
+            }
+        }
+    },
+    "scripts": {
+        "test": "node --import tsx --test **/*.test.ts",
+        "build": "rslib build",
+        "prepack": "npm run build"
+    },
+    "author": "Axetroy <axetroy.dev@gmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "@babel/parser": "^7.26.10",
+        "@babel/traverse": "^7.26.10",
+        "@rslib/core": "^0.5.4",
+        "@types/babel__core": "^7.20.5",
+        "@types/babel__traverse": "^7.20.6",
+        "@types/node": "^22.10.2",
+        "outdent": "^0.8.0",
+        "prettier": "^3.5.3",
+        "tsx": "^4.19.2",
+        "typescript": "^5.7.2"
+    },
+    "keywords": [
+        "babel-plugin",
+        "detector"
+    ],
+    "homepage": "https://github.com/axetroy/babel-plugin-transform-fs-promises#readme",
+    "bugs": {
+        "url": "https://github.com/axetroy/babel-plugin-transform-fs-promises/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/axetroy/babel-plugin-transform-fs-promises.git"
+    },
+    "peerDependencies": {
+        "@babel/core": "^7.26.10"
+    }
+}
