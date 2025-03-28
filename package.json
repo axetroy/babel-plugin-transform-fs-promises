@@ -1,6 +1,6 @@
 {
     "name": "babel-plugin-transform-fs-promises",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "private": false,
     "description": "A Babel plugin to transform fs promises APIs",
     "sideEffects": false,
