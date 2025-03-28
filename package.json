@@ -62,6 +62,6 @@
         "url": "git+https://github.com/axetroy/babel-plugin-transform-fs-promises.git"
     },
     "peerDependencies": {
-        "@babel/core": "^7.26.10"
+        "@babel/core": ">=7"
     }
 }
