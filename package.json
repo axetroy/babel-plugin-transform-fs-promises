@@ -29,7 +29,7 @@
     "scripts": {
         "test": "node --import tsx --test **/*.test.ts",
         "test:update-snapshot": "node --import tsx --test-update-snapshots --test **/*.test.ts ",
-        "build": "rslib build",
+        "build": "knip && rslib build",
         "prepack": "npm run build"
     },
     "author": "Axetroy <axetroy.dev@gmail.com>",
@@ -41,6 +41,7 @@
         "@types/babel__code-frame": "^7.0.6",
         "@types/babel__core": "^7.20.5",
         "@types/node": "^22.10.2",
+        "knip": "^5.46.3",
         "outdent": "^0.8.0",
         "prettier": "^3.5.3",
         "tsx": "^4.19.2",
