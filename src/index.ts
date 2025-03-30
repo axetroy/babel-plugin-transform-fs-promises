@@ -77,6 +77,66 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                         ]),
                     ]);
                 }
+
+                // 3. 处理 import * as fs from 'fs/promises' → import { promises as fs } from 'fs'
+                if (
+                    moduleNames.has(node.source.value) &&
+                    node.specifiers.length === 1 &&
+                    t.isImportNamespaceSpecifier(node.specifiers[0])
+                ) {
+                    const localPromises = t.identifier("_promises_no_conflict_alias");
+                    path.replaceWith(
+                        t.importDeclaration([t.importSpecifier(node.specifiers[0].local, t.identifier("promises"))], t.stringLiteral("fs")),
+                    );
+                }
+            },
+            ExportAllDeclaration(path) {
+                const { node } = path;
+
+                // 1. 处理 export * from 'fs/promises' → export * from 'fs'
+                if (moduleNames.has(node.source.value)) {
+                    const localPromises = t.identifier("_promises_no_conflict_alias");
+
+                    path.replaceWithMultiple([
+                        t.importDeclaration([t.importSpecifier(localPromises, t.identifier("promises"))], t.stringLiteral("fs")),
+                        t.exportDefaultDeclaration(localPromises),
+                    ]);
+                }
+            },
+
+            ExportNamedDeclaration(path) {
+                const { node } = path;
+
+                // 1. 处理 export { readFile } from 'fs/promises' → export { readFile } from 'fs'
+                if (moduleNames.has(node.source?.value) && node.specifiers.some((spec) => t.isExportSpecifier(spec))) {
+                    const namesSpecifiers = node.specifiers.filter((spec) => t.isExportSpecifier(spec));
+
+                    const defaultSpec = node.specifiers.find((spec) => t.isExportDefaultSpecifier(spec));
+
+                    const localPromises = t.identifier("_promises_no_conflict_alias");
+
+                    path.replaceWithMultiple(
+                        [
+                            t.importDeclaration(
+                                [
+                                    defaultSpec ? t.importDefaultSpecifier(t.identifier(defaultSpec.exported.name)) : undefined,
+                                    t.importSpecifier(localPromises, t.identifier("promises")),
+                                ].filter(Boolean),
+                                t.stringLiteral("fs"),
+                            ),
+                            t.variableDeclaration("const", [
+                                t.variableDeclarator(
+                                    t.objectPattern(
+                                        namesSpecifiers.map((spec) => t.objectProperty(spec.local, spec.exported, false, true)),
+                                    ),
+                                    localPromises,
+                                ),
+                            ]),
+                            t.exportNamedDeclaration(null, namesSpecifiers),
+                            defaultSpec ? defaultSpec : null,
+                        ].filter(Boolean),
+                    );
+                }
             },
         },
     } satisfies PluginObj<Babel.PluginPass>;

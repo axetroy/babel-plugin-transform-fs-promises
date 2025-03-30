@@ -137,7 +137,54 @@ const esm: Array<TestCase> = [
       import fs, { promises as _promises_no_conflict_alias } from "fs";
       const { readFile } = _promises_no_conflict_alias;
     `
-  ]
+  ],
+  // esm: import alias default
+  [
+    [
+      `import * as fs from "fs/promises";`,
+      `import * as fs from "node:fs/promises";`,
+    ],
+    `import { promises as fs } from "fs";`
+  ],
+  // esm: export all
+  [
+    [
+      'export * from "fs/promises";',
+      'export * from "node:fs/promises";'
+    ],
+    `
+      import { promises as _promises_no_conflict_alias } from "fs";
+      export default _promises_no_conflict_alias
+    `
+  ],
+
+  // esm: export named
+  [
+    [
+      'export { readFile } from "fs/promises";',
+      'export { readFile } from "node:fs/promises";'
+    ],
+    `
+      import { promises as _promises_no_conflict_alias } from "fs";
+      const { readFile } = _promises_no_conflict_alias;
+      export { readFile };
+    `
+  ],
+
+  // esm: export default and named
+  // https://babeljs.io/docs/babel-plugin-proposal-export-default-from
+  // [
+  //   [
+  //     'export fs, { readFile } from "fs/promises";',
+  //     'export fs, { readFile } from "node:fs/promises";',
+  //   ],
+  //   `
+  //     import fs, { promises as _promises_no_conflict_alias } from "fs";
+  //     const { readFile } = _promises_no_conflict_alias;
+  //     export { readFile };
+  //     export default fs;
+  //   `
+  // ],
 ]
 
 testSnapshot('esm', esm);
