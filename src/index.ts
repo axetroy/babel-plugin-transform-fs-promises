@@ -168,7 +168,7 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                             ]),
                             t.exportNamedDeclaration(
                                 null,
-                                namesSpecifiers.map((spec) => t.exportSpecifier(spec.local, specUidIdentifierMap.get(spec))),
+                                namesSpecifiers.map((spec) => t.exportSpecifier(specUidIdentifierMap.get(spec), spec.local)),
                             ),
                             defaultSpec ? defaultSpec : null,
                         ].filter(Boolean),

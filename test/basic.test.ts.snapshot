@@ -191,7 +191,7 @@ exports[`transform-fs-promises: esm > export { readFile } from "fs/promises"; 1`
       2 | const {
       3 |   readFile: _readFile
       4 | } = _promises;
-      5 | export { readFile as _readFile };
+      5 | export { _readFile as readFile };
 `;
 
 exports[`transform-fs-promises: esm > export { readFile } from "fs/promises"; import fs from "fs/promises"; 1`] = `
@@ -205,7 +205,7 @@ exports[`transform-fs-promises: esm > export { readFile } from "fs/promises"; im
       2 | const {
       3 |   readFile: _readFile
       4 | } = _promises;
-      5 | export { readFile as _readFile };
+      5 | export { _readFile as readFile };
       6 | import { promises as fs } from "fs";
 `;
 
@@ -220,7 +220,7 @@ exports[`transform-fs-promises: esm > export { readFile } from "fs/promises"; im
       2 | const {
       3 |   readFile: _readFile
       4 | } = _promises;
-      5 | export { readFile as _readFile };
+      5 | export { _readFile as readFile };
       6 | import { promises as _promises2 } from "fs";
       7 | const {
       8 |   readFile
@@ -238,7 +238,7 @@ exports[`transform-fs-promises: esm > export { readFile } from "node:fs/promises
       2 | const {
       3 |   readFile: _readFile
       4 | } = _promises;
-      5 | export { readFile as _readFile };
+      5 | export { _readFile as readFile };
 `;
 
 exports[`transform-fs-promises: esm > export { readFile } from "node:fs/promises"; import fs from "node:fs/promises"; 1`] = `
@@ -252,7 +252,7 @@ exports[`transform-fs-promises: esm > export { readFile } from "node:fs/promises
       2 | const {
       3 |   readFile: _readFile
       4 | } = _promises;
-      5 | export { readFile as _readFile };
+      5 | export { _readFile as readFile };
       6 | import { promises as fs } from "fs";
 `;
 
@@ -267,7 +267,7 @@ exports[`transform-fs-promises: esm > export { readFile } from "node:fs/promises
       2 | const {
       3 |   readFile: _readFile
       4 | } = _promises;
-      5 | export { readFile as _readFile };
+      5 | export { _readFile as readFile };
       6 | import { promises as _promises2 } from "fs";
       7 | const {
       8 |   readFile

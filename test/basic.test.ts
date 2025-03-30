@@ -193,7 +193,7 @@ const esm: Array<TestCase> = [
     `
       import { promises as _promises } from "fs";
       const { readFile: _readFile } = _promises;
-      export { readFile as _readFile };
+      export { _readFile as readFile };
     `
   ],
 
@@ -207,7 +207,7 @@ const esm: Array<TestCase> = [
   //   `
   //     import fs, { promises as _promises } from "fs";
   //     const { readFile: _readFile } = _promises;
-  //     export { readFile as _readFile };
+  //     export { _readFile as readFile };
   //     export default fs;
   //   `
   // ],
@@ -221,7 +221,7 @@ const esm: Array<TestCase> = [
     `
       import { promises as _promises } from "fs";
       const { readFile: _readFile } = _promises;
-      export { readFile as _readFile };
+      export { _readFile as readFile };
       import { promises as fs } from "fs";
     `
   ],
@@ -235,7 +235,7 @@ const esm: Array<TestCase> = [
     `
       import { promises as _promises } from "fs";
       const { readFile: _readFile } = _promises;
-      export { readFile as _readFile };
+      export { _readFile as readFile };
       import { promises as _promises2 } from "fs";
       const { readFile } = _promises2;
     `
