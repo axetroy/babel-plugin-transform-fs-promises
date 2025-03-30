@@ -37,6 +37,7 @@ function testSnapshot(name: string, codes: Array<TestCase>) {
           if (Array.isArray(code) && code.length > 1) {
             const output = code[1];
             assert(result);
+
             await assertCode(result.code!, output);
           }
   
@@ -112,8 +113,8 @@ const esm: Array<TestCase> = [
       `import { readFile } from "node:fs/promises";`,
     ],
     `
-      import { promises as _promises_no_conflict_alias} from "fs";
-      const { readFile } = _promises_no_conflict_alias;
+      import { promises as _promises} from "fs";
+      const { readFile } = _promises;
     `,
   ],
   // esm: import multiple named
@@ -123,8 +124,8 @@ const esm: Array<TestCase> = [
       `import { readFile, stat } from "node:fs/promises";`,
     ],
     `
-      import { promises as _promises_no_conflict_alias } from "fs";
-      const { readFile, stat } = _promises_no_conflict_alias;
+      import { promises as _promises } from "fs";
+      const { readFile, stat } = _promises;
     `,
   ],
   // esm: import default + named
@@ -134,8 +135,8 @@ const esm: Array<TestCase> = [
       `import fs, { readFile } from "node:fs/promises";`,
     ],
     `
-      import fs, { promises as _promises_no_conflict_alias } from "fs";
-      const { readFile } = _promises_no_conflict_alias;
+      import fs, { promises as _promises } from "fs";
+      const { readFile } = _promises;
     `
   ],
   // esm: import alias default
@@ -153,8 +154,8 @@ const esm: Array<TestCase> = [
       'export * from "node:fs/promises";'
     ],
     `
-      import { promises as _promises_no_conflict_alias } from "fs";
-      export default _promises_no_conflict_alias
+      import { promises as _promises } from "fs";
+      export default _promises
     `
   ],
 
@@ -165,9 +166,9 @@ const esm: Array<TestCase> = [
       'export { readFile } from "node:fs/promises";'
     ],
     `
-      import { promises as _promises_no_conflict_alias } from "fs";
-      const { readFile } = _promises_no_conflict_alias;
-      export { readFile };
+      import { promises as _promises } from "fs";
+      const { readFile: _readFile } = _promises;
+      export { readFile as _readFile };
     `
   ],
 
@@ -179,12 +180,41 @@ const esm: Array<TestCase> = [
   //     'export fs, { readFile } from "node:fs/promises";',
   //   ],
   //   `
-  //     import fs, { promises as _promises_no_conflict_alias } from "fs";
-  //     const { readFile } = _promises_no_conflict_alias;
-  //     export { readFile };
+  //     import fs, { promises as _promises } from "fs";
+  //     const { readFile: _readFile } = _promises;
+  //     export { readFile as _readFile };
   //     export default fs;
   //   `
   // ],
+
+  // esm: export and import
+  [
+    [
+      'export { readFile } from "fs/promises"; import fs from "fs/promises";',
+      'export { readFile } from "node:fs/promises"; import fs from "node:fs/promises";'
+    ],
+    `
+      import { promises as _promises } from "fs";
+      const { readFile: _readFile } = _promises;
+      export { readFile as _readFile };
+      import { promises as fs } from "fs";
+    `
+  ],
+
+  // esm: export named and import named with same key
+  [
+    [
+      'export { readFile } from "fs/promises"; import { readFile } from "fs/promises";',
+      'export { readFile } from "node:fs/promises"; import { readFile } from "node:fs/promises";'
+    ],
+    `
+      import { promises as _promises } from "fs";
+      const { readFile: _readFile } = _promises;
+      export { readFile as _readFile };
+      import { promises as _promises2 } from "fs";
+      const { readFile } = _promises2;
+    `
+  ],
 ]
 
 testSnapshot('esm', esm);

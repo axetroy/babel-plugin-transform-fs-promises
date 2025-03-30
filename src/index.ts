@@ -62,7 +62,7 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
 
                     const defaultSpec = node.specifiers.find((spec) => t.isImportDefaultSpecifier(spec));
 
-                    const localPromises = t.identifier("_promises_no_conflict_alias");
+                    const localPromises = path.scope.generateUidIdentifier("promises");
 
                     path.replaceWithMultiple([
                         t.importDeclaration(
@@ -84,7 +84,6 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                     node.specifiers.length === 1 &&
                     t.isImportNamespaceSpecifier(node.specifiers[0])
                 ) {
-                    const localPromises = t.identifier("_promises_no_conflict_alias");
                     path.replaceWith(
                         t.importDeclaration([t.importSpecifier(node.specifiers[0].local, t.identifier("promises"))], t.stringLiteral("fs")),
                     );
@@ -95,7 +94,7 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
 
                 // 1. 处理 export * from 'fs/promises' → export * from 'fs'
                 if (moduleNames.has(node.source.value)) {
-                    const localPromises = t.identifier("_promises_no_conflict_alias");
+                    const localPromises = path.scope.generateUidIdentifier("promises");
 
                     path.replaceWithMultiple([
                         t.importDeclaration([t.importSpecifier(localPromises, t.identifier("promises"))], t.stringLiteral("fs")),
@@ -113,7 +112,9 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
 
                     const defaultSpec = node.specifiers.find((spec) => t.isExportDefaultSpecifier(spec));
 
-                    const localPromises = t.identifier("_promises_no_conflict_alias");
+                    const localPromises = path.scope.generateUidIdentifier("promises");
+
+                    const specUidIdentifierMap = new Map<Babel.types.ExportSpecifier, Babel.types.Identifier>();
 
                     path.replaceWithMultiple(
                         [
@@ -127,12 +128,21 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                             t.variableDeclaration("const", [
                                 t.variableDeclarator(
                                     t.objectPattern(
-                                        namesSpecifiers.map((spec) => t.objectProperty(spec.local, spec.exported, false, true)),
+                                        namesSpecifiers.map((spec) => {
+                                            const UidIdentifier = path.scope.generateUidIdentifier(spec.local.name);
+
+                                            specUidIdentifierMap.set(spec, UidIdentifier);
+
+                                            return t.objectProperty(spec.local, UidIdentifier, false, false);
+                                        }),
                                     ),
                                     localPromises,
                                 ),
                             ]),
-                            t.exportNamedDeclaration(null, namesSpecifiers),
+                            t.exportNamedDeclaration(
+                                null,
+                                namesSpecifiers.map((spec) => t.exportSpecifier(spec.local, specUidIdentifierMap.get(spec))),
+                            ),
                             defaultSpec ? defaultSpec : null,
                         ].filter(Boolean),
                     );
