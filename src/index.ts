@@ -77,7 +77,7 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                     );
                 }
 
-                // 2. 处理 import { readFile, stat } from 'fs/promises' → import { promises } from 'fs';\nconst { readFile, stat } = promises;
+                // 2. 处理 import { readFile, stat } from 'fs/promises' → import { promises: _promises } from 'fs';\nconst { readFile, stat } = _promises;
                 if (moduleNames.has(node.source.value) && node.specifiers.some((spec) => t.isImportSpecifier(spec))) {
                     const namesSpecifiers = node.specifiers.filter((spec) => t.isImportSpecifier(spec));
 
@@ -133,7 +133,7 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
             ExportNamedDeclaration(path) {
                 const { node } = path;
 
-                // 1. 处理 export { readFile } from 'fs/promises' → export { readFile } from 'fs'
+                // 1. 处理 export { readFile } from 'fs/promises' → import { promises as _promises } from 'fs'\nexport { readFile } from _promises;
                 if (moduleNames.has(node.source?.value) && node.specifiers.some((spec) => t.isExportSpecifier(spec))) {
                     const namesSpecifiers = node.specifiers.filter((spec) => t.isExportSpecifier(spec));
 
