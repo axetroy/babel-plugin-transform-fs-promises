@@ -39,6 +39,8 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                     t.isStringLiteral(node.arguments[0]) &&
                     moduleNames.has(node.arguments[0].value)
                 ) {
+                    const internalIdentifier = path.scope.generateUidIdentifier("esModule");
+
                     path.replaceWith(
                         t.callExpression(
                             t.memberExpression(
@@ -47,8 +49,8 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                             ),
                             [
                                 t.arrowFunctionExpression(
-                                    [t.identifier("m")],
-                                    t.memberExpression(t.identifier("m"), t.identifier("promises")),
+                                    [internalIdentifier],
+                                    t.memberExpression(internalIdentifier, t.identifier("promises")),
                                 ),
                             ],
                         ),

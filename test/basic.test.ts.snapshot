@@ -75,7 +75,7 @@ exports[`transform-fs-promises: esm > const fs = import("fs/promises"); 1`] = `
 
 ### Output
 
-      1 | const fs = import("fs").then(m => m.promises);
+      1 | const fs = import("fs").then(_esModule => _esModule.promises);
 `;
 
 exports[`transform-fs-promises: esm > const fs = import("node:fs/promises"); 1`] = `
@@ -85,7 +85,7 @@ exports[`transform-fs-promises: esm > const fs = import("node:fs/promises"); 1`]
 
 ### Output
 
-      1 | const fs = import("fs").then(m => m.promises);
+      1 | const fs = import("fs").then(_esModule => _esModule.promises);
 `;
 
 exports[`transform-fs-promises: esm > export * from "fs/promises"; 1`] = `

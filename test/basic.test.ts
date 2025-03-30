@@ -96,7 +96,7 @@ const esm: Array<TestCase> = [
       `const fs = import("fs/promises");`,
       `const fs = import("node:fs/promises");`,
     ],
-    `const fs = import("fs").then((m) => m.promises);`,
+    `const fs = import("fs").then((_esModule) => _esModule.promises);`,
   ],
   // esm: import default
   [
