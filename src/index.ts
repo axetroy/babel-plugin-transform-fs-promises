@@ -6,6 +6,11 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
 
     const moduleNames = new Set(["fs/promises", "node:fs/promises"]);
 
+    const generateImportSourceStringLiteral = (source: string) => {
+        const moduleName = source.replace(/\/promises$/, "").replace(/^node:/, "");
+        return t.stringLiteral(moduleName);
+    };
+
     return {
         name: "transform-fs-promises",
         visitor: {
@@ -20,20 +25,26 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                     moduleNames.has(node.arguments[0].value)
                 ) {
                     path.replaceWith(
-                        t.memberExpression(t.callExpression(t.identifier("require"), [t.stringLiteral("fs")]), t.identifier("promises")),
+                        t.memberExpression(
+                            t.callExpression(t.identifier("require"), [generateImportSourceStringLiteral(node.arguments[0].value)]),
+                            t.identifier("promises"),
+                        ),
                     );
                 }
 
                 // 2. 处理动态导入 await import('fs/promises') → await import('fs').then(m => m.promises)
                 if (
-                    t.isImport(node.callee) &&
+                    (t.isImport(node.callee) || t.isIdentifier(node.callee, { name: "import" })) &&
                     node.arguments.length === 1 &&
                     t.isStringLiteral(node.arguments[0]) &&
                     moduleNames.has(node.arguments[0].value)
                 ) {
                     path.replaceWith(
                         t.callExpression(
-                            t.memberExpression(t.callExpression(t.identifier("import"), [t.stringLiteral("fs")]), t.identifier("then")),
+                            t.memberExpression(
+                                t.callExpression(t.identifier("import"), [generateImportSourceStringLiteral(node.arguments[0].value)]),
+                                t.identifier("then"),
+                            ),
                             [
                                 t.arrowFunctionExpression(
                                     [t.identifier("m")],
@@ -52,7 +63,10 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                 if (moduleNames.has(node.source.value) && node.specifiers.length === 1 && t.isImportDefaultSpecifier(node.specifiers[0])) {
                     const localName = node.specifiers[0].local.name;
                     path.replaceWith(
-                        t.importDeclaration([t.importSpecifier(t.identifier(localName), t.identifier("promises"))], t.stringLiteral("fs")),
+                        t.importDeclaration(
+                            [t.importSpecifier(t.identifier(localName), t.identifier("promises"))],
+                            generateImportSourceStringLiteral(node.source.value),
+                        ),
                     );
                 }
 
@@ -67,7 +81,7 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                     path.replaceWithMultiple([
                         t.importDeclaration(
                             [defaultSpec, t.importSpecifier(localPromises, t.identifier("promises"))].filter(Boolean),
-                            t.stringLiteral("fs"),
+                            generateImportSourceStringLiteral(node.source.value),
                         ),
                         t.variableDeclaration("const", [
                             t.variableDeclarator(
@@ -85,7 +99,10 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                     t.isImportNamespaceSpecifier(node.specifiers[0])
                 ) {
                     path.replaceWith(
-                        t.importDeclaration([t.importSpecifier(node.specifiers[0].local, t.identifier("promises"))], t.stringLiteral("fs")),
+                        t.importDeclaration(
+                            [t.importSpecifier(node.specifiers[0].local, t.identifier("promises"))],
+                            generateImportSourceStringLiteral(node.source.value),
+                        ),
                     );
                 }
             },
@@ -97,7 +114,10 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                     const localPromises = path.scope.generateUidIdentifier("promises");
 
                     path.replaceWithMultiple([
-                        t.importDeclaration([t.importSpecifier(localPromises, t.identifier("promises"))], t.stringLiteral("fs")),
+                        t.importDeclaration(
+                            [t.importSpecifier(localPromises, t.identifier("promises"))],
+                            generateImportSourceStringLiteral(node.source.value),
+                        ),
                         t.exportDefaultDeclaration(localPromises),
                     ]);
                 }
@@ -123,7 +143,7 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                                     defaultSpec ? t.importDefaultSpecifier(t.identifier(defaultSpec.exported.name)) : undefined,
                                     t.importSpecifier(localPromises, t.identifier("promises")),
                                 ].filter(Boolean),
-                                t.stringLiteral("fs"),
+                                generateImportSourceStringLiteral(node.source.value),
                             ),
                             t.variableDeclaration("const", [
                                 t.variableDeclarator(
