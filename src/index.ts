@@ -19,14 +19,19 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
 
                 // 1. 处理 require('fs/promises') → require('fs').promises
                 if (
-                    t.isIdentifier(node.callee, { name: "require" }) &&
+                    // require('xxx')
+                    (t.isIdentifier(node.callee, { name: "require" }) ||
+                        // module.require('xxx')
+                        (t.isMemberExpression(node.callee) &&
+                            t.isIdentifier(node.callee.object, { name: "module" }) &&
+                            t.isIdentifier(node.callee.property, { name: "require" }))) &&
                     node.arguments.length === 1 &&
                     t.isStringLiteral(node.arguments[0]) &&
                     moduleNames.has(node.arguments[0].value)
                 ) {
                     path.replaceWith(
                         t.memberExpression(
-                            t.callExpression(t.identifier("require"), [generateImportSourceStringLiteral(node.arguments[0].value)]),
+                            t.callExpression(node.callee, [generateImportSourceStringLiteral(node.arguments[0].value)]),
                             t.identifier("promises"),
                         ),
                     );

@@ -1,3 +1,23 @@
+exports[`transform-fs-promises: cjs > const fs = module.require("fs/promises"); 1`] = `
+### Input
+
+      1 | const fs = module.require("fs/promises");
+
+### Output
+
+      1 | const fs = module.require("fs").promises;
+`;
+
+exports[`transform-fs-promises: cjs > const fs = module.require("node:fs/promises"); 1`] = `
+### Input
+
+      1 | const fs = module.require("node:fs/promises");
+
+### Output
+
+      1 | const fs = module.require("fs").promises;
+`;
+
 exports[`transform-fs-promises: cjs > const fs = require("fs/promises"); 1`] = `
 ### Input
 
@@ -16,6 +36,30 @@ exports[`transform-fs-promises: cjs > const fs = require("node:fs/promises"); 1`
 ### Output
 
       1 | const fs = require("fs").promises;
+`;
+
+exports[`transform-fs-promises: cjs > const { readFile } = module.require("fs/promises"); 1`] = `
+### Input
+
+      1 | const { readFile } = module.require("fs/promises");
+
+### Output
+
+      1 | const {
+      2 |   readFile
+      3 | } = module.require("fs").promises;
+`;
+
+exports[`transform-fs-promises: cjs > const { readFile } = module.require("node:fs/promises"); 1`] = `
+### Input
+
+      1 | const { readFile } = module.require("node:fs/promises");
+
+### Output
+
+      1 | const {
+      2 |   readFile
+      3 | } = module.require("fs").promises;
 `;
 
 exports[`transform-fs-promises: cjs > const { readFile } = require("fs/promises"); 1`] = `
@@ -40,6 +84,32 @@ exports[`transform-fs-promises: cjs > const { readFile } = require("node:fs/prom
       1 | const {
       2 |   readFile
       3 | } = require("fs").promises;
+`;
+
+exports[`transform-fs-promises: cjs > const { readFile, stat } = module.require("fs/promises"); 1`] = `
+### Input
+
+      1 | const { readFile, stat } = module.require("fs/promises");
+
+### Output
+
+      1 | const {
+      2 |   readFile,
+      3 |   stat
+      4 | } = module.require("fs").promises;
+`;
+
+exports[`transform-fs-promises: cjs > const { readFile, stat } = module.require("node:fs/promises"); 1`] = `
+### Input
+
+      1 | const { readFile, stat } = module.require("node:fs/promises");
+
+### Output
+
+      1 | const {
+      2 |   readFile,
+      3 |   stat
+      4 | } = module.require("fs").promises;
 `;
 
 exports[`transform-fs-promises: cjs > const { readFile, stat } = require("fs/promises"); 1`] = `

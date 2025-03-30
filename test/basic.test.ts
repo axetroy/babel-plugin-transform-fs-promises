@@ -85,6 +85,31 @@ const cjs: Array<TestCase> = [
     ],
     `const { readFile, stat } = require("fs").promises;`
   ],
+
+  // cjs: import default with module.require
+  [
+    [
+      `const fs = module.require("fs/promises");`,
+      `const fs = module.require("node:fs/promises");`
+    ],
+    `const fs = module.require("fs").promises;`,
+  ],
+  // cjs: import named with module.require
+  [
+    [
+      `const { readFile } = module.require("fs/promises");`,
+      `const { readFile } = module.require("node:fs/promises");`,
+    ],
+    `const { readFile } = module.require("fs").promises;`
+  ],
+  // cjs: import multiple named with module.require
+  [
+    [
+      `const { readFile, stat } = module.require("fs/promises");`,
+      `const { readFile, stat } = module.require("node:fs/promises");`,
+    ],
+    `const { readFile, stat } = module.require("fs").promises;`
+  ],
 ]
 
 testSnapshot('cjs', cjs);
