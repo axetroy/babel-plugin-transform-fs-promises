@@ -4,12 +4,20 @@ import test, { describe } from "node:test";
 import { transformSync } from "@babel/core";
 import prettier from "prettier";
 import outdent from "outdent";
-import babelCoreFrame from "@babel/code-frame";
+import { codeFrameColumns } from "@babel/code-frame";
 
 import babelPluginTransformFsPromises from "../src/index";
 
 function formatCode(code: string) {
   return prettier.format(code, { parser: "babel" });
+}
+
+// Show all lines of `code` with line numbers and no highlight marker.
+// We pass a line number beyond the code so `codeFrameColumns` has nothing to mark,
+// while `linesAbove: Infinity` pulls all preceding lines into view.
+function codeFrame(code: string): string {
+  const lineCount = code.split("\n").length;
+  return codeFrameColumns(code, { start: { line: lineCount + 1 } }, { linesAbove: Infinity, linesBelow: 0 });
 }
 
 async function assertCode(code: string, output: string) {
@@ -44,11 +52,11 @@ function testSnapshot(name: string, codes: Array<TestCase>) {
           const markdown = outdent`
           ### Input
   
-          ${paddingLines(babelCoreFrame(input, 0, 0, {}), 4)}
+          ${paddingLines(codeFrame(input), 4)}
   
           ### Output
           
-          ${paddingLines(babelCoreFrame(result?.code!, 0, 0, { linesAbove: Infinity, linesBelow: Infinity }), 4)}
+          ${paddingLines(codeFrame(result?.code!), 4)}
           `;
   
           t.assert.snapshot(markdown, {
