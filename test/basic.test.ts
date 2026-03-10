@@ -142,6 +142,17 @@ const esm: Array<TestCase> = [
       const { readFile } = _promises;
     `,
   ],
+  // esm: import named with alias
+  [
+    [
+      `import { readFile as read } from "fs/promises";`,
+      `import { readFile as read } from "node:fs/promises";`,
+    ],
+    `
+      import { promises as _promises } from "fs";
+      const { readFile: read } = _promises;
+    `,
+  ],
   // esm: import multiple named
   [
     [
@@ -194,6 +205,18 @@ const esm: Array<TestCase> = [
       import { promises as _promises } from "fs";
       const { readFile: _readFile } = _promises;
       export { _readFile as readFile };
+    `
+  ],
+  // esm: export named with alias
+  [
+    [
+      'export { readFile as read } from "fs/promises";',
+      'export { readFile as read } from "node:fs/promises";'
+    ],
+    `
+      import { promises as _promises } from "fs";
+      const { readFile: _readFile } = _promises;
+      export { _readFile as read };
     `
   ],
 
