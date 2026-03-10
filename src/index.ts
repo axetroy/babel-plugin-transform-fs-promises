@@ -92,7 +92,16 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                         ),
                         t.variableDeclaration("const", [
                             t.variableDeclarator(
-                                t.objectPattern(namesSpecifiers.map((spec) => t.objectProperty(spec.local, spec.imported, false, true))),
+                                t.objectPattern(
+                                    namesSpecifiers.map((spec) => {
+                                        const importedKey = t.isIdentifier(spec.imported)
+                                            ? spec.imported
+                                            : t.identifier(spec.imported.value);
+                                        const isShorthand =
+                                            t.isIdentifier(spec.imported) && spec.imported.name === spec.local.name;
+                                        return t.objectProperty(importedKey, spec.local, false, isShorthand);
+                                    }),
+                                ),
                                 localPromises,
                             ),
                         ]),
@@ -168,7 +177,7 @@ function babelPluginTransformFsPromises(babel: typeof Babel) {
                             ]),
                             t.exportNamedDeclaration(
                                 null,
-                                namesSpecifiers.map((spec) => t.exportSpecifier(specUidIdentifierMap.get(spec), spec.local)),
+                                namesSpecifiers.map((spec) => t.exportSpecifier(specUidIdentifierMap.get(spec), spec.exported)),
                             ),
                             defaultSpec ? defaultSpec : null,
                         ].filter(Boolean),

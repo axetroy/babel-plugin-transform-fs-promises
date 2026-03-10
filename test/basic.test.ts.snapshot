@@ -180,6 +180,34 @@ exports[`transform-fs-promises: esm > export * from "node:fs/promises"; 1`] = `
       2 | export default _promises;
 `;
 
+exports[`transform-fs-promises: esm > export { readFile as read } from "fs/promises"; 1`] = `
+### Input
+
+      1 | export { readFile as read } from "fs/promises";
+
+### Output
+
+      1 | import { promises as _promises } from "fs";
+      2 | const {
+      3 |   readFile: _readFile
+      4 | } = _promises;
+      5 | export { _readFile as read };
+`;
+
+exports[`transform-fs-promises: esm > export { readFile as read } from "node:fs/promises"; 1`] = `
+### Input
+
+      1 | export { readFile as read } from "node:fs/promises";
+
+### Output
+
+      1 | import { promises as _promises } from "fs";
+      2 | const {
+      3 |   readFile: _readFile
+      4 | } = _promises;
+      5 | export { _readFile as read };
+`;
+
 exports[`transform-fs-promises: esm > export { readFile } from "fs/promises"; 1`] = `
 ### Input
 
@@ -337,6 +365,32 @@ exports[`transform-fs-promises: esm > import fs, { readFile } from "node:fs/prom
       1 | import fs, { promises as _promises } from "fs";
       2 | const {
       3 |   readFile
+      4 | } = _promises;
+`;
+
+exports[`transform-fs-promises: esm > import { readFile as read } from "fs/promises"; 1`] = `
+### Input
+
+      1 | import { readFile as read } from "fs/promises";
+
+### Output
+
+      1 | import { promises as _promises } from "fs";
+      2 | const {
+      3 |   readFile: read
+      4 | } = _promises;
+`;
+
+exports[`transform-fs-promises: esm > import { readFile as read } from "node:fs/promises"; 1`] = `
+### Input
+
+      1 | import { readFile as read } from "node:fs/promises";
+
+### Output
+
+      1 | import { promises as _promises } from "fs";
+      2 | const {
+      3 |   readFile: read
       4 | } = _promises;
 `;
 

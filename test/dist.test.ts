@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { execSync } from "node:child_process";
 
-const rootDir = path.join(__dirname, "..");
+const rootDir = path.join(import.meta.dirname, "..");
 
 before(() => {
   execSync("npm run build", {
